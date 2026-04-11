@@ -1,19 +1,29 @@
 # include "utils.hpp"
+# include "constants.hpp"
 # include <iostream>
-
+# include "arithmetic.hpp"
+# include "geometry.hpp"
 using std::cout;
+auto countArr = {getAddCountReadOnly(), getSubCountReadOnly(), getMulCountReadOnly(), getDivCountReadOnly(), getRectCountReadOnly(), getTriCountReadOnly()};
+const std::string countStrArr[] = {"add", "subtract", "multiply", "divide", "rectangle", "triangle"};
 
-void printSeparator()
+void printSeparator(int length, char ch='-')
 {
-    cout<<"-----------------------------"<<std::endl;
+    for(int i=0;i<length;i++)
+        cout<<ch;
+    cout<<std::endl;
 }
 
-void printStatistics(int addCount,int subCount,int mulCount,int rectCount,int triCount)
+void printSeparator(char ch='-')
 {
-    cout<<"Function call statistics:"<<std::endl;
-    cout<<"add: "<<addCount<<" times"<<std::endl;
-    cout<<"subtract: "<<subCount<<" times"<<std::endl;
-    cout<<"multiply: "<<mulCount<<" times"<<std::endl;
-    cout<<"rectangle: "<<rectCount<<" times"<<std::endl;
-    cout<<"triangle: "<<triCount<<" times"<<std::endl;
+    printSeparator(MAX_PRINT_LENGTH, ch);
+}
+
+void printStatistics(const int& addCount, const int& subCount, const int& mulCount, const int& divCount, const int& rectCount, const int& triCount)
+{
+    for(auto arr:countArr)
+    {
+        int index = &arr - &getAddCountReadOnly();
+        cout<<countStrArr[index]<<" : "<<arr<<" times"<<std::endl;
+    }
 }

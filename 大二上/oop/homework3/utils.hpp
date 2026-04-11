@@ -3,6 +3,6 @@
 
 void printSeparator();
 
-void printStatistics(int addCount ,int subCount, int mulCount, int rectCount, int triCount);
+void printStatistics(const int& addCount, const int& subCount, const int& mulCount, const int& divCount, const int& rectCount, const int& triCount);
 
 # endif
