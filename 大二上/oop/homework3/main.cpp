@@ -5,9 +5,10 @@
 #include <iostream>
 #include <cstdio>
 #include <string>
-
+#include <cstring>
+#include <cctype>
 int _dowildcard = 0;
-
+//声明回调函数
 int executeArithmetic(ArithmeticFunc callback, int a, int b, ArithmeticOp op);
 double executeGeometry(GeometryFunc callback, const double &a, const double &b, GeometryShape shape);
 using std::cin;
@@ -29,9 +30,10 @@ int main(int argc, const char *argv[])
         cout << num1 << " - " << num2 << " = " << executeArithmetic(subtract, num1, num2, SUB) << endl;
         cout << num1 << " * " << num2 << " = " << executeArithmetic(multiply, num1, num2, MUL) << endl;
         cout << num1 << " / " << num2 << " = " << executeArithmetic(divide, num1, num2, DIV) << endl;
-        if(num1<=0||num2<=0)
+        // 边长为负数的情况，输出错误信息并返回0
+        if (num1 <= 0 || num2 <= 0)
         {
-            cout<<"Error: Both numbers must be positive for geometry calculations."<<endl;
+            cout << "Error: Both numbers must be positive for geometry calculations." << endl;
             return 0;
         }
         cout << "Rectangle area (" << num1 << "x" << num2 << ") = ";
@@ -42,20 +44,31 @@ int main(int argc, const char *argv[])
     }
     else if (argc == 4)
     {
-        GeometryShape Geoop = getGeometryOp((char *)argv[1]);
-        if (Geoop == RECTANGLE)
+        if (strcmp(argv[1], "rectangle") == 0 || strcmp(argv[1], "triangle") == 0)
         {
+            GeometryShape Geoop = getGeometryOp((char *)argv[1]);
             auto num1 = std::stoi(argv[2]);
             auto num2 = std::stoi(argv[3]);
-            cout << "Rectangle area (" << num1 << "x" << num2 << ") = ";
-            printf("%.2f\n", executeGeometry(rectangleArea, num1, num2, RECTANGLE));
+            if (num1 <= 0 || num2 <= 0)
+            {
+                cout << "Error: Both numbers must be positive for geometry calculations." << endl;
+                return 0;
+            }
+            if (Geoop == RECTANGLE)
+            {
+                cout << "Rectangle area (" << num1 << "x" << num2 << ") = ";
+                printf("%.2f\n", executeGeometry(rectangleArea, num1, num2, RECTANGLE));
+            }
+            else if (Geoop == TRIANGLE)
+            {
+                cout << "Triangle area (base " << num1 << ", height " << num2 << ") = ";
+                printf("%.2f\n", executeGeometry(triangleArea, num1, num2, TRIANGLE));
+            }
         }
-        else if (Geoop == TRIANGLE)
+        else if (isdigit(argv[2][0]) && isdigit(argv[3][0]))
         {
-            auto num1 = std::stoi(argv[2]);
-            auto num2 = std::stoi(argv[3]);
-            cout << "Triangle area (base " << num1 << ", height " << num2 << ") = ";
-            printf("%.2f\n", executeGeometry(triangleArea, num1, num2, TRIANGLE));
+            cout << "Invalid operator. Supported operators are: +, -, *, /, rectangle, triangle." << endl;
+            return 0;
         }
         else
         {
@@ -80,6 +93,7 @@ int main(int argc, const char *argv[])
             }
             else
             {
+                // 无效的运算符，输出错误信息并返回0
                 cout << "Invalid operator. Supported operators are: +, -, *, /, rectangle, triangle." << endl;
                 return 0;
             }
@@ -89,19 +103,20 @@ int main(int argc, const char *argv[])
     {
         cout << "Usage: " << endl;
         cout << "Interactive: calculator" << endl;
-        cout << "Arithmetic: calculator [num1] [+-*] [num2]" << endl;
+        cout << "Arithmetic: calculator [num1] [+-*/] [num2]" << endl;
         cout << "Geometry: calculator [rectangle|triangle] [num1] [num2]";
         return 0;
     }
-    printStatistics(getAddCount(), getSubCount(), getMulCount(), getDivCount(), getRectCount(), getTriCount());
+    printStatistics(getAddCountReadOnly(), getSubCountReadOnly(), getMulCountReadOnly(), getDivCountReadOnly(), getRectCountReadOnly(), getTriCountReadOnly());
     return 0;
 }
-
+//定义算术回调函数
 int executeArithmetic(const ArithmeticFunc callback, int a, int b, ArithmeticOp op)
 {
+    //使用const指针参数，确保回调函数不会修改传入的参数
     if (callback == nullptr)
     {
-        cout << "错误" << endl;
+        cout << "Invalid arithmetic function." << endl;
         return 0;
     }
     switch (op)
@@ -124,11 +139,13 @@ int executeArithmetic(const ArithmeticFunc callback, int a, int b, ArithmeticOp 
     }
     return callback(a, b);
 }
+//定义几何回调函数
 double executeGeometry(const GeometryFunc callback, const double &a, const double &b, GeometryShape shape)
 {
+    //使用const引用参数，确保回调函数不会修改传入的参数
     if (callback == nullptr)
     {
-        cout << "错误" << endl;
+        cout << "Invalid geometry function." << endl;
         return 0;
     }
     switch (shape)
