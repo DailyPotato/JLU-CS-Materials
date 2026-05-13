@@ -1,0 +1,5 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+enum{WON=1,TUE,WED,THU,FRI,SAT,SUN,YEARDAYS=365};
+#endif
