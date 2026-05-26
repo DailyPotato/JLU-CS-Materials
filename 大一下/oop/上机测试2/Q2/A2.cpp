@@ -49,7 +49,7 @@ public:
             {
                 if(tempyear!=other.year)
                 {
-                    if (tempyear % 4 == 0 && tempyear % 100 != 0 || tempyear % 400 == 0)
+                    if ((tempyear % 4 == 0 && tempyear % 100 != 0) || (tempyear % 400 == 0))
                         addday += 29;
                     else
                         addday += 28;
