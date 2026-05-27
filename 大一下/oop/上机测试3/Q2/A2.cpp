@@ -1,56 +1,63 @@
 #include <iostream>
-#include <cmath>
 #include <utility>
+#define PI 3.141592653589793
 using namespace std;
-
-class CTNFRACTION
+#define MAXLEN 30
+class CTF
 {
 public:
-    CTNFRACTION(double n)
+    CTF(long double n):len(0)
     {
-        double temp=n;
-        while(temp>1e-6)
+        long double temp=n;
+        while(static_cast<int>(temp)&&len<MAXLEN)
         {
-            arr[len++]=static_cast<int>(temp);
-            temp=1/(temp-arr[len-1]);
+            // cout<<static_cast<int>(temp)<<endl;
+            arr[len]=static_cast<int>(temp);
+            temp-=arr[len];
+            temp=1/temp;
+            len++;
         }
     }
-    int geta_i(int i)
+    int getA_i(int i)
     {
-        if(i>=len) return -1;
-        return arr[i];
+        return arr[i-1];
     }
-    pair<int, int> calFraction(int q)
+    pair<int,int> getF(int q)
     {
-        int numerator=1;
-        int denominator=1;
-        for(int i=q-1;i>=0;i--)
+        int fenzi=arr[q-1];
+        int fenmu=1;
+        for(int i=q-1;i>0;i--)
         {
-            if(i==len-1)
-            {
-                numerator=arr[i];
-                denominator=1;
-            }
-            else
-            {
-                int temp=denominator;
-                denominator=arr[i]*denominator+numerator;
-                numerator=temp;
-            }
+            int temp=fenmu;
+            fenmu=fenzi;
+            fenzi=temp+arr[i-1]*fenmu;
         }
-        return make_pair(numerator, denominator);
+        return make_pair(fenzi,fenmu);
     }
-
+    void print(int q)
+    {
+        for(int i=0;i<q-1;i++)
+        {
+            cout<<arr[i]<<"+";
+        }
+        cout<<arr[q-1];
+    }
 private:
-    int MAXLEN=30;
-    int arr[30];
-    int len=0;
+int len;
+int arr[MAXLEN];
 };
+
+
 
 int main()
 {
-    double n;
-    cin>>n;
-    CTNFRACTION ctn(n);
+    CTF a(PI);
+    for(int i=1;i<=10;i++)
+    {
+        cout<<"前"<<i<<"项为"<<a.getA_i(i)<<endl;
+        cout<<"前"<<i<<"项的分数为"<<a.getF(i).first<<"/"<<a.getF(i).second<<endl;
+        cout<<"前"<<i<<"项对应的分支值为"<<static_cast<long double>(a.getF(i).first)/a.getF(i).second<<endl;
+        cout<<"前"<<i<<"项对应分数与PI的差值为"<<static_cast<long double>(a.getF(i).first)/a.getF(i).second-PI<<endl<<endl;
+    }
     return 0;
 }
