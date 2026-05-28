@@ -13,6 +13,7 @@ bool Calculator::isValidNumber(const std::string &str)
         std::stod(str, &parsed_chars);
         return parsed_chars == str.length();
     }
+    // 如果转换失败，抛出异常，捕获后返回false
     catch (...)
     {
         return false;
@@ -107,14 +108,13 @@ void Calculator::printVersion()
 
 void Calculator::printHelp()
 {
-    printVersion();
     cout << "max num=" << MAX_CAL_NUM << endl;
     cout << "default divider length=" << defaultDividerLenth << endl;
 }
 
 void Calculator::runInteractive()
 {
-    cout << "Useage: " << endl;
+    cout << "Usage: " << endl;
     cout << "arithmatic calculate format: [num1] [ + | - | * | / | % ] [num2]" << endl;
     cout << "geometry calculate format: [rectangle|triangle] [num1] [num2]" << endl;
     while (true)
@@ -123,6 +123,7 @@ void Calculator::runInteractive()
         cin >> op;
         if (op == "exit")
         {
+            cout<<"Enter command:exit"<<endl;
             return;
         }
         else if (op == "rectangle" || op == "triangle")

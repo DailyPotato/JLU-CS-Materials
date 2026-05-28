@@ -3,16 +3,19 @@
 #include <iomanip>
 int main(int argc, char *argv[])
 {
+    // 匿名对象
     Calculator().printHelp();
     Calculator::printVersion();
 
     if (argc == 1)
     {
+        // 栈对象
         Calculator calc;
         calc.runInteractive();
     }
     else if (argc >= 3)
     {
+        // 动态对象
         Calculator *pCalc = new Calculator(10);
         string op = argv[1];
         if (op == "rectangle" || op == "triangle")
@@ -45,9 +48,18 @@ int main(int argc, char *argv[])
         }
         else
         {
-            double num1 = stod(argv[1]);
+            double num1,num2;
             string op = argv[2];
-            double num2 = stod(argv[3]);
+            try
+            {
+                num1=stod(argv[1]);
+                num2=stod(argv[3]);
+            }
+            catch(...)
+            {
+                cout << "Error: Invalid number format." << endl;
+                return 0;
+            }
             if (!pCalc->isLessThanMaxCalNum(num1) || !pCalc->isLessThanMaxCalNum(num2))
             {
                 cout << "Error: Number exceeds maximum value ( " << Calculator::getMaxCalNum() << " )." << endl;
