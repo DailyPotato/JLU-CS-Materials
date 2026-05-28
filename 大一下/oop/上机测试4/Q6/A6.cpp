@@ -8,8 +8,9 @@ public:
     Paginate &setPage(int page, int total)
     {
         num = page;
-        rangeStart = max(num / 5 * 5+1, 1);
-        rangeEnd = min(total, num / 5 * 5 + 5);
+        rangeStart = max((num-1) / 5 * 5+1, 1);
+        rangeEnd = min(total,rangeStart + 4);
+        rangeStart = max(rangeEnd - 4, 1);
         return *this;
     }
     Paginate &prev()
@@ -70,6 +71,10 @@ public:
         if (rangeEnd != total)
         {
             cout << "... " << total << " " << "обрЁ"<< endl;
+        }
+        else
+        {
+            cout << "обрЁ" << endl;
         }
     }
 
