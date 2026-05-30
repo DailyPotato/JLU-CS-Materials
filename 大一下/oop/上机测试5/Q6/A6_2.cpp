@@ -61,7 +61,7 @@ private:
     bool openOrClose;
 };
 
-class WallWithDoor:public Wall,private Door
+class WallWithDoor:public Wall
 {
 public:
     WallWithDoor(){}
@@ -70,12 +70,14 @@ public:
         Paint(color);
         if(color==1)
         {
-            Close();
+            door->Close();
         }
         else if(color==2)
         {
-            Open();
+            door->Open();
         }
 
     }
+private:
+    Door* door;
 };

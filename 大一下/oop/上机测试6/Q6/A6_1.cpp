@@ -1,0 +1,57 @@
+#include <iostream>
+using namespace std;
+class CallBackObject;
+class Server
+{
+public:
+    Server(int size) : len(size)
+    {
+        data = new int[len];
+        for (int i = 0; i < len; ++i)
+            data[i] = i + 1;
+    }
+    ~Server() { delete[] data; }
+    int Total(CallBackObject &obj);
+
+private:
+    int len;
+    int *data;
+};
+class CallBackObject
+{
+public:
+    virtual ~CallBackObject() {}
+    virtual int CallBackFunc(int val) = 0;
+};
+class ClientA : public CallBackObject
+{
+public:
+    virtual ~ClientA() {}
+    virtual int CallBackFunc(int val)
+    {
+        return val;
+    }
+    void RequestA(Server &srv)
+    {
+        cout << srv.Total(*this) << endl;
+    }
+};
+int Server::Total(CallBackObject &obj)
+{
+    int sum = 0;
+    for (int i = 0; i < len; ++i)
+    {
+        sum += data[i];
+    }
+    return sum;
+}
+
+// 主函数 1
+int main()
+{
+    Server srv2(2), srv5(5);
+    ClientA a;
+    a.RequestA(srv2); // 输出 3
+    a.RequestA(srv5); // 输出 15
+    return 0;
+}
