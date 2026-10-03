@@ -1,5 +1,7 @@
-#include<iostream>
+#include <iostream>
+#include <vector>
 using namespace std;
+
 class Node
 {
 public:
@@ -11,21 +13,24 @@ public:
         next = nextNode;
     }
 };
-void DeleteData(Node* head,int mink,int maxk)
-{
-    if(head==nullptr||head->next==nullptr)return;
 
-    Node* p=head;
-    while(p->next!=nullptr&&p->next->data<=mink)
+void reverseList(Node* head)
+{
+    if (head == nullptr)
+        return;
+
+    Node* prev = nullptr;
+    Node* current = head->next;
+
+    while (current != nullptr)
     {
-        p=p->next;
+        Node* nextNode = current->next;
+
+        current->next = prev;
+        prev = current;
+        current = nextNode;
     }
-    while(p->next!=nullptr&&p->next->data<maxk)
-    {
-        Node* temp=p->next;
-        p->setNext(temp->next);
-        delete temp;
-    }
+    head->next = prev;
 }
 
 int main()
@@ -42,7 +47,7 @@ int main()
         p->setNext(newNode);
         p = newNode;
     }
-    DeleteData(head, 1, 5);
+    reverseList(head);
     for(Node *p = head->next; p != nullptr; p = p->next)
     {
         cout << p->data << " ";

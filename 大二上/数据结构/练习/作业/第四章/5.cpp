@@ -1,0 +1,2 @@
+         a b c a b c a c a b c a
+next    -1 0 0 0 1 2 3 4 0 1 2 3
